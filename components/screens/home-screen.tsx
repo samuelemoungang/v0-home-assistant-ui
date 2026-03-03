@@ -1,6 +1,6 @@
 "use client"
 
-import { DollarSign, Home, Bot, Monitor } from "lucide-react"
+import { DollarSign, Home, Bot, Monitor, LogOut } from "lucide-react"
 import { GlassCard } from "@/components/dashboard/glass-card"
 import { AvatarDisplay } from "@/components/dashboard/avatar-display"
 import { WeatherTime } from "@/components/dashboard/weather-time"
@@ -16,18 +16,28 @@ const cornerIcons = {
   "top-left": DollarSign,
   "top-right": Home,
   "bottom-left": Bot,
-  "bottom-right": Monitor,
+  "bottom-right": LogOut,
 }
 
 const cornerConfig = {
   "top-left": { label: "Finance", target: "finance" as Screen },
   "top-right": { label: "Home", target: "home" as Screen },
   "bottom-left": { label: "Offline AI", target: "offline-ai" as Screen },
-  "bottom-right": { label: "Raspberry Home", target: null as Screen | null },
+  "bottom-right": { label: "Exit", target: null as Screen | null },
+}
+
+function exitDashboard() {
+  // In Chromium kiosk mode, window.close() exits to the desktop
+  window.close()
+  // Fallback: if window.close() is blocked, navigate to about:blank
+  setTimeout(() => {
+    window.location.href = "about:blank"
+  }, 300)
 }
 
 export function HomeScreen({ onNavigate }: HomeScreenProps) {
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const [showExitConfirm, setShowExitConfirm] = useState(false)
 
   return (
     <div className="relative w-full h-full">
@@ -40,7 +50,11 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
             key={position}
             position={position}
             onClick={() => {
-              if (config.target) onNavigate(config.target)
+              if (config.target) {
+                onNavigate(config.target)
+              } else {
+                setShowExitConfirm(true)
+              }
             }}
           >
             <Icon className="w-5 h-5 text-primary" />
@@ -72,6 +86,32 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
           </div>
         </div>
       </div>
+
+      {/* Exit confirmation overlay */}
+      {showExitConfirm && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+          <div className="rounded-xl border border-glass-border bg-card p-6 text-center flex flex-col items-center gap-4 w-[280px]">
+            <LogOut className="w-8 h-8 text-destructive" />
+            <p className="text-foreground font-medium text-sm">Vuoi uscire dalla dashboard?</p>
+            <div className="flex gap-3 w-full">
+              <button
+                type="button"
+                onClick={() => setShowExitConfirm(false)}
+                className="flex-1 rounded-lg border border-border bg-secondary px-4 py-3 text-sm font-medium text-secondary-foreground active:scale-95 transition-transform cursor-pointer"
+              >
+                Annulla
+              </button>
+              <button
+                type="button"
+                onClick={exitDashboard}
+                className="flex-1 rounded-lg bg-destructive px-4 py-3 text-sm font-medium text-destructive-foreground active:scale-95 transition-transform cursor-pointer"
+              >
+                Esci
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
