@@ -92,21 +92,21 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
           <div className="rounded-xl border border-glass-border bg-card p-6 text-center flex flex-col items-center gap-4 w-[280px]">
             <LogOut className="w-8 h-8 text-destructive" />
-            <p className="text-foreground font-medium text-sm">Vuoi uscire dalla dashboard?</p>
+            <p className="text-foreground font-medium text-sm">Exit the dashboard?</p>
             <div className="flex gap-3 w-full">
               <button
                 type="button"
                 onClick={() => setShowExitConfirm(false)}
                 className="flex-1 rounded-lg border border-border bg-secondary px-4 py-3 text-sm font-medium text-secondary-foreground active:scale-95 transition-transform cursor-pointer"
               >
-                Annulla
+                Cancel
               </button>
               <button
                 type="button"
                 onClick={exitDashboard}
                 className="flex-1 rounded-lg bg-destructive px-4 py-3 text-sm font-medium text-destructive-foreground active:scale-95 transition-transform cursor-pointer"
               >
-                Esci
+                Exit
               </button>
             </div>
           </div>
