@@ -17,7 +17,7 @@ interface WeatherData {
 }
 
 export function WeatherTime() {
-  const [time, setTime] = useState(new Date())
+  const [time, setTime] = useState<Date | null>(null)
   const [weather] = useState<WeatherData>({
     condition: "cloudy",
     temperature: 12,
@@ -25,11 +25,23 @@ export function WeatherTime() {
   })
 
   useEffect(() => {
+    setTime(new Date())
     const interval = setInterval(() => setTime(new Date()), 1000)
     return () => clearInterval(interval)
   }, [])
 
   const WeatherIcon = weatherIcons[weather.condition]
+
+  if (!time) {
+    return (
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-4xl font-light tracking-wider text-foreground font-mono tabular-nums">
+          --:--
+        </span>
+        <span className="text-sm text-muted-foreground">Loading...</span>
+      </div>
+    )
+  }
 
   const formattedTime = time.toLocaleTimeString("en-US", {
     hour: "2-digit",
