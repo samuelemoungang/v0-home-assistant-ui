@@ -18,6 +18,10 @@ from flask import Flask, jsonify
 import psutil
 import os
 import time
+import logging
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 app = Flask(__name__)
 
